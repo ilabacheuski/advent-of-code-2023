@@ -1,14 +1,7 @@
 pub fn gear_ratios1(input: &str) -> usize {
-    println!("input: {}", input);
-    // let input = input
-    //     .lines()
-    //     .inspect(|line| println!("{}", line))
-    //     .map(|line| format!("${line}."))
-    //     .inspect(|line| println!("{}", line))
-    //     .collect::<Vec<String>>()
-    //     .join("\n");
     let lines: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
     let mut result = 0;
+    let mut deb = Vec::new();
 
     for (i, &line) in lines.iter().enumerate() {
         let mut line_iter = line.iter().enumerate();
@@ -20,7 +13,6 @@ pub fn gear_ratios1(input: &str) -> usize {
 
                 let mut next_char = line_iter.next();
                 while let Some((idx, char)) = next_char {
-                    println!("{} {} {}", idx, char, number);
                     if char.is_ascii_digit() {
                         number = number * 10 + (char - b'0') as usize;
                     } else {
@@ -40,35 +32,17 @@ pub fn gear_ratios1(input: &str) -> usize {
                 if let Some((_, &char)) = next_char {
                     if char != b'.' {
                         is_part = true;
-                        println!("right {} {}", number, is_part);
                     }
                 }
 
                 // at left end
-                println!("{} {}", start_idx, end_idx);
                 if start_idx > 0 {
                     if let Some(&char) = line.get(start_idx - 1) {
                         if char != b'.' {
                             is_part = true;
-                            println!("left {} {}", number, is_part);
                         }
                     }
                 }
-
-                // let start_left_bound = if start_idx == 0 { 0 } else { start_idx - 1 };
-                // let end_left_bound = if start_idx == line.len() - 1 {
-                //     start_idx
-                // } else {
-                //     start_idx + 1
-                // };
-                // let start_right_bound = if end_idx == 0 { 0 } else { end_idx - 1 };
-                // let end_right_bound = if end_idx == line.len() - 1 {
-                //     end_idx
-                // } else {
-                //     end_idx + 1
-                // };
-                // let left_bound = if start_idx == 0 { 0 } else { start_idx - 1 };
-                // let right_bound = if end_idx == 0 { 0 } else { end_idx - 1 };
 
                 let left_bound = if start_idx == 0 { 0 } else { start_idx - 1 };
                 let right_bound = if end_idx == line.len() - 1 {
@@ -79,35 +53,9 @@ pub fn gear_ratios1(input: &str) -> usize {
                 // up
                 if i > 0 {
                     if let Some(&test_line) = lines.get(i - 1) {
-                        let res = check_slice(&test_line[left_bound..=right_bound]);
-                        // let l_slice = &test_line[start_left_bound..=end_left_bound];
-                        // let r_slice = &test_line[start_right_bound..=end_right_bound];
-                        // if number == 35 {
-                        //     println!(
-                        //         "{:?} {:?} {} {} {} {} {}",
-                        //         l_slice,
-                        //         r_slice,
-                        //         start_left_bound,
-                        //         end_left_bound,
-                        //         start_right_bound,
-                        //         end_right_bound,
-                        //         j
-                        //     );
-                        // };
-
-                        // if l_slice
-                        //     .iter()
-                        //     .any(|&char| !(char == b'.' || char.is_ascii_digit()))
-                        //     || r_slice
-                        //         .iter()
-                        //         .any(|&char| !(char == b'.' || char.is_ascii_digit()))
-                        // {
-                        //     is_part = true;
-                        //     println!("up {} {}", number, is_part);
-                        // }
+                        let res = check_slice(&test_line[left_bound..right_bound]);
                         if res {
                             is_part = true;
-                            println!("up {} {}", number, is_part);
                         }
                     }
                 }
@@ -115,34 +63,21 @@ pub fn gear_ratios1(input: &str) -> usize {
                 // bottom
                 if i != lines.len() - 1 {
                     if let Some(&test_line) = lines.get(i + 1) {
-                        let res = check_slice(&test_line[left_bound..=right_bound]);
-                        // let l_slice = &test_line[start_left_bound..=end_left_bound];
-                        // let r_slice = &test_line[start_right_bound..=end_right_bound];
-
-                        // if l_slice
-                        //     .iter()
-                        //     .any(|&char| !(char == b'.' || char.is_ascii_digit()))
-                        //     || r_slice
-                        //         .iter()
-                        //         .any(|&char| !(char == b'.' || char.is_ascii_digit()))
-                        // {
-                        //     is_part = true;
-                        //     println!("bottom {} {}", number, is_part);
-                        // }
+                        let res = check_slice(&test_line[left_bound..right_bound]);
                         if res {
                             is_part = true;
-                            println!("bottom {} {}", number, is_part);
                         }
                     }
                 }
 
-                println!("------>>>>>>> {} {}", number, is_part);
                 if is_part {
+                    deb.push(number);
                     result += number;
                 }
             }
         }
     }
+
     result
 }
 

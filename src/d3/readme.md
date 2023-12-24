@@ -4,5 +4,5 @@ k
 
 ## Time to solve
 
-First part - 142 min;
+First part - 162 min;
 Second part -
